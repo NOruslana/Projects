@@ -18,5 +18,8 @@ namespace api
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<TypeAbsence> TypeAbsence { get; set; }
         public DbSet<Material> Materials { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

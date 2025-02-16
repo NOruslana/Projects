@@ -110,6 +110,39 @@ namespace api.Migrations
                     b.ToTable("CalendarEducation");
                 });
 
+            modelBuilder.Entity("api.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("api.Models.Depatment", b =>
                 {
                     b.Property<int>("DepatmentId")
@@ -159,6 +192,36 @@ namespace api.Migrations
                     b.HasIndex("DissmisedNameWorkerId");
 
                     b.ToTable("Dissmised");
+                });
+
+            modelBuilder.Entity("api.Models.Document", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasComments")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("api.Models.Event", b =>
@@ -295,6 +358,27 @@ namespace api.Migrations
                     b.ToTable("TypeAbsence");
                 });
 
+            modelBuilder.Entity("api.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("api.Models.Worker", b =>
                 {
                     b.Property<int>("WorkerId")
@@ -379,6 +463,21 @@ namespace api.Migrations
                         .HasForeignKey("WorkerId");
                 });
 
+            modelBuilder.Entity("api.Models.Comment", b =>
+                {
+                    b.HasOne("api.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("api.Models.Document", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
             modelBuilder.Entity("api.Models.Dissmised", b =>
                 {
                     b.HasOne("api.Models.Worker", "DissmisedName")
@@ -448,6 +547,11 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.CalendarEducation", b =>
                 {
                     b.Navigation("Materials");
+                });
+
+            modelBuilder.Entity("api.Models.Document", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("api.Models.Worker", b =>
